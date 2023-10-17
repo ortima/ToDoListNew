@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoListApp</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <form id="form">
+            <p class="alert"></p>
+            <h3 class="title">ToDoListApp</h3>
+            <div class="control">
+                <input type="text" id = "entry" placeholder="купить хлеб" maxlength = "80">
+                <button type="submit" class="btn submit-btn">Записать</button>
+                <button type="cancel" class="btn cancel-btn d-none">Отмена</button>
+            </div>
+        </form>
+
+        <ul id="todo-list" class="list-container">
+        </ul>
+
+        <button class = "btn clear-btn d-none">Очистить лист</button>
+    </main>
+    <script src="main.js"></script>
+</body>
+</html>
