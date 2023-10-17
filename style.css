@@ -18,8 +18,7 @@
 
 body{
     background: #cdcdcd;
-    min-height: 100vh;
-    overflow: hidden;
+    min-height: 100%;
     font-family: var(--ff);
 }
 
@@ -112,6 +111,7 @@ main{
     justify-content: space-between;
     align-items: center;
     padding: .5rem .9rem .5rem .4rem;
+    word-break: break-all;
 }
 
 .text{
