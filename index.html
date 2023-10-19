@@ -10,19 +10,20 @@
 <body>
     <main>
         <form id="form">
-            <p class="alert"></p>
+            <span class="alert"></span>
             <h3 class="title">ToDoListApp</h3>
             <div class="control">
-                <input type="text" id = "entry" placeholder="купить хлеб" maxlength = "60">
-                <button type="submit" class="btn submit-btn">Записать</button>
-                <button type="cancel" class="btn cancel-btn d-none">Отмена</button>
+                <input type="text" id = "entry" placeholder="купить хлеб" maxlength = "80">
+                <button type="button" id = "clear-row-btn" class="btn clear-row-btn d-none">Очистить</button>
+                <button type="submit" id = "submit-btn" class="btn submit-btn">Записать</button>
+                <button type="cancel" id = "cancel-btn" class="btn cancel-btn d-none">Отмена</button>
             </div>
         </form>
 
-        <ul id="todo-list" class="list-container">
+        <ul id="todoList" class="list-container">
         </ul>
 
-        <button class = "btn clear-btn d-none">Очистить лист</button>
+        <button id = "clear-btn" class = "btn clear-btn d-none">Очистить лист</button>
     </main>
     <script src="main.js"></script>
 </body>

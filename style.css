@@ -33,7 +33,11 @@ main{
     border-radius: 1em;
     padding: 1.2rem 2rem 1.8rem;
 }
-
+span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .alert{
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -83,6 +87,7 @@ main{
 }
 
 .submit-btn, 
+.clear-row-btn,
 .cancel-btn{
     outline: none;
     border: 1px solid #eee;
@@ -95,6 +100,7 @@ main{
 }
 
 .submit-btn:hover,
+.clear-row-btn:hover,
 .cancel-btn:hover{
     background-color: #eee;
     color: #222;

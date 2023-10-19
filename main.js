@@ -1,14 +1,16 @@
 const entry = document.getElementById('entry')
 const form = document.getElementById('form')
-const ul = document.getElementById('todo-list')
+const ul = document.getElementById('todoList')
 const alertP = document.querySelector('.alert')
 
-const clearBtn = document.querySelector('.clear-btn')
-const submitBtn = document.querySelector('.submit-btn')
-const cancelBtn = document.querySelector('.cancel-btn')
+const clearBtn = document.getElementById('clear-btn')
+const submitBtn = document.getElementById('submit-btn')
+const cancelBtn = document.getElementById('cancel-btn')
+const clearRowBtn = document.getElementById('clear-row-btn')
 
 
-let LSkey= 'items';
+
+let localStorageKey= 'items';
 let editFlag = false
 let editElement; 
 let editID; 
@@ -17,37 +19,55 @@ window.addEventListener('DOMContentLoaded', setupItems)
 form.addEventListener("submit", addItem);  // submit form
 clearBtn.addEventListener('click', clearItems); // clearAll button
 cancelBtn.addEventListener('click', setBackToDefault); //cancel button
+entry.addEventListener('input', inputChange); //show clear-row button
+clearRowBtn.addEventListener('click', clearRow)
+
+function clearRow(){
+  entry.value = null;
+  clearRowBtn.classList.add('d-none');
+}
+
+function inputChange(){
+  if (entry.value){
+    clearRowBtn.classList.remove('d-none');
+  }
+  else{
+    clearRowBtn.classList.add('d-none');
+  }
+}
 
 function addItem(e) {
   e.preventDefault()
-  let val = entry.value;
-  let id = new Date().getTime().toString();   
-
-  if(val && !editFlag){ 
-    createLIS(val,id)
+  let textInput = entry.value;
+  let id = new Date().getTime().toString(); 
+    
+  if (textInput.trim().length == ''){
+    textInput = null;
+    displayAlert('Пустая запись','alert-danger')
+    clearRowBtn.classList.add('d-none');
+  }
+  else if(textInput && !editFlag){ 
+    createLIS(textInput,id)
     displayAlert('Новая запись добавлена','alert-success')
     clearBtn.classList.remove('d-none')
-    addToLS(val,id)
+    clearRowBtn.classList.add('d-none');
+    addToLocalStorage(textInput,id)
   }
-  else if(val && editFlag){
-    editElement.innerText = val
+  else if(textInput && editFlag){
+    editElement.innerText = textInput
     displayAlert("Запись изменена", "alert-success");
-    editLS(val,editID)
+    editLocalStorage(textInput,editID)
     setBackToDefault()
   }
-  else{
-    displayAlert('Пустая запись','alert-danger')
-  }
-
   entry.value = null
 }
 
-function createLIS(val,id) {
+function createLIS(textInput,id) {
   const li = document.createElement('li');
   li.className = 'list-item';
   li.setAttribute('data-id', id); 
   li.innerHTML = `
-    <p class="text">${val}</p>
+    <p class="text">${textInput}</p>
     <i class='bx bxs-edit bx-sm'></i>
     <i class='bx bx-check bx-sm'></i>
     <i class='bx bxs-trash bx-sm'></i>`;
@@ -81,7 +101,6 @@ function checkItem() {
   this.parentElement.classList.toggle('liChecked')
 }
 
-
 function deleteItem() {
   let id = this.parentElement.dataset.id 
   ul.removeChild(this.parentElement)
@@ -89,7 +108,7 @@ function deleteItem() {
   if(ul.children.length === 0){
     clearBtn.classList.add('d-none')
   }
-  removeFromLS(id)
+  removeFromLocalStorage(id)
 }
 
 //Display message
@@ -97,9 +116,9 @@ function displayAlert(msg,styles) {
   alertP.innerText = msg
   alertP.classList.add(styles)
   setTimeout(()=>{
-    alertP.innerText = '';
+    alertP.innerText = null;
     alertP.classList.remove(styles)
-  }, 1500)
+  }, 1600)
 }
 
 function clearItems() {
@@ -116,50 +135,49 @@ function setBackToDefault() {
   editID = undefined; 
   submitBtn.innerText = 'Записать';
   cancelBtn.classList.add('d-none');
-
-  clearBtn.classList.remove('d-none')
+  clearBtn.classList.remove('d-none');
   ul.querySelectorAll('.bx').forEach(icon => {
     icon.classList.toggle('d-none')
   });
 }
 
 // LocalStorage 
-function addToLS(val,id) {
-  let obj = {id, val}
-  let items = getLS()
+function addToLocalStorage(textInput,id) {
+  let obj = {id, textInput}
+  let items = getLocalStorage()
   items.push(obj)
-  localStorage.setItem(LSkey, JSON.stringify(items))
+  localStorage.setItem(localStorageKey, JSON.stringify(items))
 }
 
-function getLS() {
-  return localStorage.getItem(LSkey) ?
-         JSON.parse(localStorage.getItem(LSkey)) :
+function getLocalStorage() {
+  return localStorage.getItem(localStorageKey) ?
+         JSON.parse(localStorage.getItem(localStorageKey)) :
          []
 }
 
-function removeFromLS(id) {
-  let items = getLS()
+function removeFromLocalStorage(id) {
+  let items = getLocalStorage()
   items = items.filter(item => item.id !== id)
-  localStorage.setItem(LSkey, JSON.stringify(items))
+  localStorage.setItem(localStorageKey, JSON.stringify(items))
   if(items.length === 0){
-    localStorage.removeItem(LSkey)
+    localStorage.removeItem(localStorageKey)
   }
 }
 
-function editLS(val,editID) {
-  let items = getLS()
+function editLocalStorage(textInput,editID) {
+  let items = getLocalStorage()
   items = items.map(item => {
-    if(item.id === editID) item.val = val
+    if(item.id === editID) item.textInput = textInput
     return item
   })
-  localStorage.setItem(LSkey, JSON.stringify(items))
+  localStorage.setItem(localStorageKey, JSON.stringify(items))
 }
 
 function setupItems() {
-  let items = getLS()
+  let items = getLocalStorage()
   if(items.length > 0){
     items.forEach(item => {
-      createLIS(item.val, item.id)
+      createLIS(item.textInput, item.id)
     })
     clearBtn.classList.remove('d-none')
   }
